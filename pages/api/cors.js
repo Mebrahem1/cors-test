@@ -6,7 +6,12 @@ export default function handler(req, res) {
   // Set CORS headers dynamically based on the request's origin
   res.setHeader('Access-Control-Allow-Origin', origin || '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Allow specific headers requested by the client
+  res.setHeader(
+    'Access-Control-Allow-Headers', 
+    'Content-Type, Authorization, app-type, devid, x-cdn, x-client-signature, x-client-signature-version, x-id-group, x-locale, x-request-timestamp, x-site-info, x-utc, x-zkdex-env'
+  );
 
   // Handle preflight requests (OPTIONS)
   if (req.method === 'OPTIONS') {
