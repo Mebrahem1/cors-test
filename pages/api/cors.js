@@ -6,12 +6,13 @@ export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
-  // Handle preflight requests (OPTIONS)
+  // Handle preflight request
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
+    // Respond OK to the preflight check
+    res.status(204).end();
     return;
   }
 
-  // Respond to the request
+  // Handle actual request
   res.status(200).json({ message: 'CORS-enabled response!' });
 }
