@@ -4,7 +4,8 @@ export default function handler(req, res) {
   const origin = req.headers.origin;
 
   // Set CORS headers dynamically based on the request's origin
-  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   
   // Allow specific headers requested by the client
@@ -20,5 +21,5 @@ export default function handler(req, res) {
   }
 
   // Handle actual requests
-  res.status(200).json({ message: 'CORS-enabled response for specific origin!' });
+  res.status(200).json({ message: 'CORS-enabled response for specific origin with credentials allowed!' });
 }
