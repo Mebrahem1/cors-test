@@ -38,6 +38,21 @@ module.exports = async (req, res) => {
 };
 
 async function handleUserMessage(userId, messageText) {
+   // Check if the user input is "start" to reset the bot flow
+   if (messageText.toLowerCase() === "start") {
+      userState[userId] = "start"; // Reset to start step
+      let startStep = flow.steps["start"];
+      
+      // Format the options to display them with the message
+      let optionsText = Object.keys(startStep.options)
+         .map(key => `${key}: ${startStep.options[key]}`)
+         .join("\n");
+      
+      // Send the start message along with the options
+      sendMessage(userId, `${startStep.message}\n\n${optionsText}`);
+      return;
+   }
+
    let currentStepKey = userState[userId] || 'start';
    let currentStep = flow.steps[currentStepKey];
 
@@ -103,6 +118,7 @@ async function handleUserMessage(userId, messageText) {
       sendMessage(userId, "عذرًا، لم أفهم هذا الخيار.");
    }
 }
+
 
 
 function sendMessage(userId, text) {
