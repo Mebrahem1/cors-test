@@ -43,31 +43,67 @@ function handleUserMessage(userId, messageText) {
    let currentStepKey = userState[userId] || 'start';
    let currentStep = flow.steps[currentStepKey];
 
+   // Check if the current step exists in the flow
+   if (!currentStep) {
+      console.error(`Step "${currentStepKey}" not found in flow`);
+      sendMessage(userId, "حدث خطأ، الرجاء المحاولة مرة أخرى.");
+      userState[userId] = 'start'; // Reset state to start
+      return;
+   }
+
+   // Handle new order address input
    if (currentStepKey === "new_order") {
-      // Collect the address
-      userAddress[userId] = messageText; // Save the address
-      userState[userId] = "confirm_address"; // Move to the next step
+      userAddress[userId] = messageText;
+      userState[userId] = "confirm_address";
       sendMessage(userId, flow.steps["confirm_address"].message);
-      userState[userId] = "show_product"; // Move to show product
-      showProduct(userId);
-   } else if (currentStepKey === "confirm_address") {
-      // Display the product details
       userState[userId] = "show_product";
       showProduct(userId);
-   } else if (currentStep.options && currentStep.nextStep[messageText]) {
-      // Move to the next step based on user's choice
+      return;
+   }
+
+   // Handle product display step
+   if (currentStepKey === "confirm_address") {
+      userState[userId] = "show_product";
+      showProduct(userId);
+      return;
+   }
+
+   // If options exist, check for valid user response
+   if (currentStep.options && currentStep.nextStep[messageText]) {
       let nextStepKey = currentStep.nextStep[messageText];
       userState[userId] = nextStepKey;
-      sendMessage(userId, flow.steps[nextStepKey].message);
+      let nextStep = flow.steps[nextStepKey];
+      
+      // Check if next step exists in flow
+      if (!nextStep) {
+         console.error(`Step "${nextStepKey}" not found in flow`);
+         sendMessage(userId, "حدث خطأ، الرجاء المحاولة مرة أخرى.");
+         userState[userId] = 'start'; // Reset state to start
+         return;
+      }
+      
+      sendMessage(userId, nextStep.message);
    } else if (currentStep.nextStep) {
-      // Simple next step
+      // If there's a default next step
       let nextStepKey = currentStep.nextStep;
       userState[userId] = nextStepKey;
-      sendMessage(userId, flow.steps[nextStepKey].message);
+      let nextStep = flow.steps[nextStepKey];
+
+      // Check if next step exists in flow
+      if (!nextStep) {
+         console.error(`Step "${nextStepKey}" not found in flow`);
+         sendMessage(userId, "حدث خطأ، الرجاء المحاولة مرة أخرى.");
+         userState[userId] = 'start'; // Reset state to start
+         return;
+      }
+
+      sendMessage(userId, nextStep.message);
    } else {
+      // Handle undefined input or option
       sendMessage(userId, "عذرًا، لم أفهم هذا الخيار.");
    }
 }
+
 
 // Send a basic text message
 function sendMessage(userId, text) {
