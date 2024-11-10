@@ -123,11 +123,25 @@ async function handleUserMessage(userId, messageText) {
 
 function sendMessage(userId, text) {
    console.log(`Sending message to ${userId}: ${text}`);
+   
    axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: userId },
       message: { text: text }
-   }).catch(error => console.error("Error sending message:", error.response.data));
+   })
+   .catch(error => {
+      if (error.response) {
+         // If the error is an Axios error with a response
+         console.error("Error sending message:", error.response.data);
+      } else if (error.request) {
+         // If the request was made but no response was received
+         console.error("No response received:", error.request);
+      } else {
+         // Other errors (e.g., setup errors)
+         console.error("Error in setting up request:", error.message);
+      }
+   });
 }
+
 
 function showProduct(userId) {
    const product = flow.steps["show_product"].product;
