@@ -1,5 +1,5 @@
 const axios = require('axios');
-const flow = require('./flow.json'); // Import flow
+const flow = require('../flow.json'); // Import flow
 const PAGE_ACCESS_TOKEN = 'EAAL9lpMYE4EBO0wK4lRyLeOKpVlgKGBxBRZBMM9CD2Dn40O2oGsxJu21ZAQ3QEY1WbV6wSjvJvmST0LKTzxUFK7TXCbsXhJsG6ZBY1ZAmbbTScc4pA071r6OhPRJ7JkJ6RZBcAaxpbg0ae0FYiJ6HRWw48UZAHc7YGtrFxSiLkZAsyYdfZB2oSpRguzGQXXC3lBhmQZDZD'; // Facebook Page Access Token
 
 let userState = {}; // In-memory user state
@@ -41,6 +41,11 @@ async function handleUserMessage(userId, messageText) {
    let currentStepKey = userState[userId] || 'start';
    let currentStep = flow.steps[currentStepKey];
 
+   // Log the current step and user input for debugging
+   console.log(`Current Step: ${currentStepKey}`);
+   console.log(`User Input: ${messageText}`);
+   console.log(`Expected Options:`, currentStep.options);
+
    if (!currentStep) {
       console.error(`Step "${currentStepKey}" not found in flow`);
       sendMessage(userId, "حدث خطأ، الرجاء المحاولة مرة أخرى.");
@@ -48,6 +53,7 @@ async function handleUserMessage(userId, messageText) {
       return;
    }
 
+   // Handle new order address input
    if (currentStepKey === "new_order") {
       userAddress[userId] = messageText;
       userState[userId] = "confirm_address";
@@ -57,12 +63,14 @@ async function handleUserMessage(userId, messageText) {
       return;
    }
 
+   // Handle product display step
    if (currentStepKey === "confirm_address") {
       userState[userId] = "show_product";
       showProduct(userId);
       return;
    }
 
+   // If options exist, check for valid user response
    if (currentStep.options && currentStep.nextStep && typeof currentStep.nextStep[messageText] === 'string') {
       let nextStepKey = currentStep.nextStep[messageText];
       userState[userId] = nextStepKey;
@@ -90,9 +98,12 @@ async function handleUserMessage(userId, messageText) {
 
       sendMessage(userId, nextStep.message);
    } else {
+      // Handle undefined input or option
+      console.log("User input did not match any expected options.");
       sendMessage(userId, "عذرًا، لم أفهم هذا الخيار.");
    }
 }
+
 
 function sendMessage(userId, text) {
    console.log(`Sending message to ${userId}: ${text}`);
