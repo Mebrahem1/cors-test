@@ -1,0 +1,39 @@
+{
+   "steps": {
+      "start": {
+         "message": "مرحباً! كيف يمكنني مساعدتك؟",
+         "options": {
+            "1": "طلب جديد",
+            "2": "تتبع طلب"
+         },
+         "nextStep": {
+            "1": "new_order",
+            "2": "track_order"
+         }
+      },
+      "new_order": {
+         "message": "يرجى إدخال عنوانك للتوصيل:",
+         "nextStep": "confirm_address"
+      },
+      "confirm_address": {
+         "message": "تم استلام العنوان! إليك تفاصيل المنتج.",
+         "nextStep": "show_product"
+      },
+      "show_product": {
+         "product": {
+            "name": "منتج رائع",
+            "description": "هذا المنتج عالي الجودة يأتي بسعر ممتاز.",
+            "price": "100 ريال",
+            "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7bRwrbRuat2WhdDNBg9xhliiKPOrQ1toffw&s"
+         },
+         "message": "إليك التفاصيل:\nاسم المنتج: {{product.name}}\nالوصف: {{product.description}}\nالسعر: {{product.price}}"
+      },
+      "track_order": {
+         "message": "أدخل رقم الطلب الخاص بك:",
+         "nextStep": "confirm_track_order"
+      },
+      "confirm_track_order": {
+         "message": "طلبك قيد المعالجة وسيصل قريباً!"
+      }
+   }
+}
