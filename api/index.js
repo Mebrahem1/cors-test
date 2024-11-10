@@ -1,7 +1,7 @@
 // api/index.js
 
 const axios = require('axios');
-const flow = require('../flow.json'); // Importing flow from JSON
+const flow = require('./flow.json'); // Importing flow from JSON
 const PAGE_ACCESS_TOKEN = '1942974859355742|Ovkeaz6CgZeMzCeOaFS_jn-tw_w'; // Facebook Page Access Token
 
 let userState = {}; // Simple in-memory user state
