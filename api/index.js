@@ -69,7 +69,7 @@ function handleUserMessage(userId, messageText) {
    }
 
    // If options exist, check for valid user response
-   if (currentStep.options && currentStep.nextStep[messageText]) {
+   if (currentStep.options && currentStep.nextStep && currentStep.nextStep[messageText]) {
       let nextStepKey = currentStep.nextStep[messageText];
       userState[userId] = nextStepKey;
       let nextStep = flow.steps[nextStepKey];
