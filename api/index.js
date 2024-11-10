@@ -69,7 +69,7 @@ function handleUserMessage(userId, messageText) {
    }
 
    // If options exist, check for valid user response
-   if (currentStep.options && currentStep.nextStep && currentStep.nextStep[messageText]) {
+   if (currentStep.options && currentStep.nextStep && typeof currentStep.nextStep[messageText] === 'string') {
       let nextStepKey = currentStep.nextStep[messageText];
       userState[userId] = nextStepKey;
       let nextStep = flow.steps[nextStepKey];
@@ -83,8 +83,8 @@ function handleUserMessage(userId, messageText) {
       }
       
       sendMessage(userId, nextStep.message);
-   } else if (currentStep.nextStep) {
-      // If there's a default next step
+   } else if (currentStep.nextStep && typeof currentStep.nextStep === 'string') {
+      // If there's a default next step and it's a string
       let nextStepKey = currentStep.nextStep;
       userState[userId] = nextStepKey;
       let nextStep = flow.steps[nextStepKey];
